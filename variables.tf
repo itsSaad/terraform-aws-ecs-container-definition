@@ -1,10 +1,10 @@
 variable "container_name" {
-  type        = "string"
+  type        = string
   description = "The name of the container. Up to 255 characters ([a-z], [A-Z], [0-9], -, _ allowed)"
 }
 
 variable "container_image" {
-  type        = "string"
+  type        = string
   description = "The image used to start the container. Images in the Docker Hub registry available by default"
 }
 
@@ -19,18 +19,20 @@ variable "container_memory_reservation" {
 }
 
 variable "port_mappings" {
-  type        = "list"
+  type        = list(string)
   description = "The port mappings to configure for the container. This is a list of maps. Each map should contain \"containerPort\", \"hostPort\", and \"protocol\", where \"protocol\" is one of \"tcp\" or \"udp\". If using containers in a task with the awsvpc or host network mode, the hostPort can either be left blank or set to the same value as the containerPort"
 
-  default = [{
-    "containerPort" = 80
-    "hostPort"      = 80
-    "protocol"      = "tcp"
-  }]
+  default = [
+    {
+      "containerPort" = 80
+      "hostPort"      = 80
+      "protocol"      = "tcp"
+    },
+  ]
 }
 
 variable "healthcheck" {
-  type        = "map"
+  type        = map(string)
   description = "A map containing command (string), interval (duration in seconds), retries (1-10, number of times to retry before marking container unhealthy, and startPeriod (0-300, optional grace period to wait, in seconds, before failed healthchecks count toward retries)"
   default     = {}
 }
@@ -41,71 +43,68 @@ variable "container_cpu" {
 }
 
 variable "essential" {
-  type        = "string"
+  type        = string
   description = "Determines whether all other containers in a task are stopped, if this container fails or stops for any reason. Due to how Terraform type casts booleans in json it is required to double quote this value"
   default     = "true"
 }
 
 variable "entrypoint" {
-  type        = "list"
+  type        = list(string)
   description = "The entry point that is passed to the container"
   default     = [""]
 }
 
 variable "command" {
-  type        = "list"
+  type        = list(string)
   description = "The command that is passed to the container"
   default     = [""]
 }
 
 variable "working_directory" {
-  type        = "string"
+  type        = string
   description = "The working directory to run commands inside the container"
   default     = ""
 }
 
 variable "environment" {
-  type        = "list"
+  type        = list(string)
   description = "The environment variables to pass to the container. This is a list of maps"
   default     = []
 }
 
 variable "secrets" {
-  type        = "list"
+  type        = list(string)
   description = "The secrets to pass to the container. This is a list of maps"
   default     = []
 }
 
 variable "readonly_root_filesystem" {
-  type        = "string"
+  type        = string
   description = "Determines whether a container is given read-only access to its root filesystem. Due to how Terraform type casts booleans in json it is required to double quote this value"
   default     = "false"
 }
 
 variable "log_driver" {
-  type        = "string"
+  type        = string
   description = "The log driver to use for the container. If using Fargate launch type, only supported value is awslogs"
   default     = "awslogs"
 }
 
 variable "log_options" {
-  type        = "map"
+  type        = map(string)
   description = "The configuration options to send to the `log_driver`"
 
   default = {
-    "awslogs-region" = "us-west-2"
-
-    "awslogs-group" = "default"
-
+    "awslogs-region"        = "us-west-2"
+    "awslogs-group"         = "default"
     "awslogs-stream-prefix" = "default"
   }
 }
 
 variable "mount_points" {
-  type        = "list"
+  type        = list(string)
   description = "Container mount points. This is a list of maps, where each map should contain a `containerPath` and `sourceVolume`"
   default     = []
-
   #default     = [
   #  {
   #    containerPath  = "/tmp"
@@ -115,7 +114,8 @@ variable "mount_points" {
 }
 
 variable "dns_servers" {
-  type        = "list"
+  type        = list(string)
   description = "Container DNS servers. This is a list of strings specifying the IP addresses of the DNS servers."
   default     = []
 }
+
